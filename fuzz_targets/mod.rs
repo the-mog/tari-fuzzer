@@ -1,8 +1,8 @@
 extern crate digest;
 extern crate log;
 extern crate proptest;
-extern crate tari_mmr;
 extern crate tari_crypto;
+extern crate tari_mmr;
 
 use log::{info, trace, warn};
 
@@ -13,7 +13,6 @@ pub mod tari_util;
 /// Tari Core targets
 pub use tari_core_mmr::*;
 
-
 /// Tari Util targets
 pub use tari_util::*;
 
@@ -21,13 +20,12 @@ pub use tari_util::*;
 
 // Targets
 const TARGETS: &[&str] = &[
-   "fuzz_mmr_push_bytes",
-   "util_to_hex",
-   "util_bytes_to_bits",
-   "util_from_hex",
-   "util_to_hex_multiple",
+    "fuzz_mmr_push_bytes",
+    "util_to_hex",
+    "util_bytes_to_bits",
+    "util_from_hex",
+    "util_to_hex_multiple",
 ];
-
 
 pub fn list_targets() {
     trace!("Getting a list of targets");
@@ -40,11 +38,8 @@ pub fn check_target(target: &str) {
     trace!("Checking if the supplied target is available");
     if TARGETS.iter().any(|&x| x == target) {
         info!("Target located!");
-    }
-    else {
-
+    } else {
         warn!("Did not find the target: {:?}", &target);
         panic!("Uknkown fuzz target {} selected", target);
-
     }
 }

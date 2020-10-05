@@ -4,7 +4,11 @@ use std::path::PathBuf;
 use structopt::clap::arg_enum;
 
 lazy_static! {
-    static ref WORKSPACE_ROOT: PathBuf = MetadataCommand::new().no_deps().exec().unwrap().workspace_root;
+    static ref WORKSPACE_ROOT: PathBuf = MetadataCommand::new()
+        .no_deps()
+        .exec()
+        .unwrap()
+        .workspace_root;
 }
 
 arg_enum! {

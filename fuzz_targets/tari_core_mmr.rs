@@ -7,7 +7,6 @@ pub type Hasher = Blake256;
 
 /// MMR fuzzing
 
-
 pub fn fuzz_mmr_push_bytes_seeds(gen: &mut SeedGen) -> Vec<u8> {
     let data = gen.generate(proptest::arbitrary::any::<Vec<u8>>());
     data

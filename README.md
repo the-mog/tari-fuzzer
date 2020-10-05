@@ -10,7 +10,7 @@ This crate contains Tari fuzz tests and a cli app to run them.
 You need [Libfuzzer](http://llvm.org/docs/LibFuzzer.html) to get going (the fuzzer uses it by default). 
 
 ## Targets
-This fuzzer is used to fuzz the tari core,  utilities and crypto crates. 
+This fuzzer is used to fuzz the tari core, utilities and crypto crates. 
 
 
 ## Installing Engines
@@ -66,7 +66,8 @@ To fuzz using your own corpus, create a directory under your fuzz engine using t
 `cargo run fuzz -t <target> -n 0`
 
 ## Artifacts/Crashes
-Artifacts are saved under each fuzzer's directory..
+Artifacts are saved under each fuzzer's directory, using this naming convention:  
+`artifact-{target-name}`
 
 ## Usage
 

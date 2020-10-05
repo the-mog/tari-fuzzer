@@ -15,8 +15,7 @@
 //! Further adopted from https://github.com/tikv/tikv/tree/master/fuzz
 
 use std::{
-    env,
-    fs,
+    env, fs,
     io::Write,
     path::{Path, PathBuf},
     process::{Command, Stdio},
@@ -29,7 +28,11 @@ use lazy_static::lazy_static;
 use log::{info, trace};
 
 lazy_static! {
-    static ref WORKSPACE_ROOT: PathBuf = MetadataCommand::new().no_deps().exec().unwrap().workspace_root;
+    static ref WORKSPACE_ROOT: PathBuf = MetadataCommand::new()
+        .no_deps()
+        .exec()
+        .unwrap()
+        .workspace_root;
 }
 
 /// Write the fuzz target source file from corresponding template file.
@@ -38,8 +41,10 @@ lazy_static! {
 fn write_fuzz_target_source_file(fuzzer: &Fuzzer, target: &str) -> Result<()> {
     trace!("Writing target fuzz test to file");
     let template_file_path = fuzzer.directory().join("template.rs");
-    let template = fs::read_to_string(&template_file_path)
-        .context(format!("Error reading template file {}", template_file_path.display()))?;
+    let template = fs::read_to_string(&template_file_path).context(format!(
+        "Error reading template file {}",
+        template_file_path.display()
+    ))?;
 
     let target_file_path = fuzzer.directory().join(&format!("src/bin/{}.rs", target));
     info!("Target file written to {:?}", &target_file_path);
@@ -52,9 +57,10 @@ fn write_fuzz_target_source_file(fuzzer: &Fuzzer, target: &str) -> Result<()> {
             "Error writing fuzz target source file {}",
             target_file_path.display()
         ))?;
-    let source = template
-        .replace("__FUZZ_CLI_TARGET__", &target)
-        .replace("__FUZZ_GENERATE_COMMENT__", "NOTE: AUTO GENERATED FROM `template.rs`");
+    let source = template.replace("__FUZZ_CLI_TARGET__", &target).replace(
+        "__FUZZ_GENERATE_COMMENT__",
+        "NOTE: AUTO GENERATED FROM `template.rs`",
+    );
     file.write_all(source.as_bytes())?;
     Ok(())
 }
@@ -73,7 +79,11 @@ fn create_artifact_dir(base: impl AsRef<Path>, target: &str) -> Result<PathBuf> 
 }
 
 fn pre_check(command: &mut Command, hint: &str) -> Result<()> {
-    let check = command.stdout(Stdio::null()).stderr(Stdio::null()).status().unwrap();
+    let check = command
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .unwrap();
     if !check.success() {
         Err(anyhow!(
             "Pre-checking for fuzzing failed. Consider run `{}` before fuzzing.",
@@ -91,7 +101,10 @@ pub fn run_afl(target: &str, fuzzer: Fuzzer, seeds: usize) -> Result<()> {
     let artifact_dir = create_artifact_dir(fuzzer.directory(), target)?;
     let corpus_dir = gen_corpus(&target, fuzzer, seeds)?;
 
-    pre_check(Command::new("cargo").args(&["afl", "--version"]), "cargo install afl")?;
+    pre_check(
+        Command::new("cargo").args(&["afl", "--version"]),
+        "cargo install afl",
+    )?;
 
     // 1. cargo afl build (in fuzzer-afl directory)
     let fuzzer_build = Command::new("cargo")
@@ -125,7 +138,11 @@ pub fn run_afl(target: &str, fuzzer: Fuzzer, seeds: usize) -> Result<()> {
         .context(format!("Failed to wait {}", fuzzer))?;
 
     if !fuzzer_bin.success() {
-        return Err(anyhow!("{} exited with code {:?}", fuzzer, fuzzer_bin.code()));
+        return Err(anyhow!(
+            "{} exited with code {:?}",
+            fuzzer,
+            fuzzer_bin.code()
+        ));
     }
 
     Ok(())
@@ -162,7 +179,11 @@ pub fn run_honggfuzz(target: &str, fuzzer: Fuzzer, seeds: usize) -> Result<()> {
         .context(format!("Failed to wait {}", fuzzer))?;
 
     if !fuzzer_bin.success() {
-        return Err(anyhow!("{} exited with code {:?}", fuzzer, fuzzer_bin.code()));
+        return Err(anyhow!(
+            "{} exited with code {:?}",
+            fuzzer,
+            fuzzer_bin.code()
+        ));
     }
 
     Ok(())
@@ -213,7 +234,11 @@ pub fn run_libfuzzer(target: &str, fuzzer: Fuzzer, seeds: usize) -> Result<()> {
         .context(format!("Failed to wait {}", fuzzer))?;
 
     if !fuzzer_bin.success() {
-        return Err(anyhow!("{} exited with code {:?}", fuzzer, fuzzer_bin.code()));
+        return Err(anyhow!(
+            "{} exited with code {:?}",
+            fuzzer,
+            fuzzer_bin.code()
+        ));
     }
 
     Ok(())

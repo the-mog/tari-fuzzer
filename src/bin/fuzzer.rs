@@ -24,7 +24,12 @@ struct Opt {
 enum Command {
     #[structopt(name = "fuzz", about = "Fuzz specified target")]
     Fuzz {
-        #[structopt(name = "TARGET", help = "A string fuzz target", required = true, short = "t")]
+        #[structopt(
+            name = "TARGET",
+            help = "A string fuzz target",
+            required = true,
+            short = "t"
+        )]
         target: String,
         /// Engine to use (use `engines` to list them)
         #[structopt(name="ENGINE", help = "A fuzzing engine to use",
@@ -44,7 +49,12 @@ enum Command {
     ListEngines {},
     #[structopt(name = "gen-corpus", about = "Generate corpus using proptest crate")]
     GenCorpus {
-        #[structopt(name = "TARGET", help = "A string fuzz target", required = true, short = "t")]
+        #[structopt(
+            name = "TARGET",
+            help = "A string fuzz target",
+            required = true,
+            short = "t"
+        )]
         target: String,
         /// Number of items to generate in the corpus
         #[structopt(
@@ -61,7 +71,9 @@ enum Command {
 }
 
 fn main() {
-    env_logger::builder().filter_level(LevelFilter::Trace).init();
+    env_logger::builder()
+        .filter_level(LevelFilter::Trace)
+        .init();
     let opt = Opt::from_args();
     if let Err(TariError::UnexpectedError(_0)) = run(opt) {
         warn!("Exiting...");
@@ -74,7 +86,11 @@ fn run(opt: Opt) -> Result<()> {
     // info!("Got it Yat ?\u{1F982}\u{1F596}\u{270C}\u{FE0F}\u{2764}\u{FE0F}\u{2604}\u{FE0F}\u{1F37A}\u{1F37A}");
     info!("https://www.tari.com");
     match opt.command {
-        Command::Fuzz { target, engine, seeds } => {
+        Command::Fuzz {
+            target,
+            engine,
+            seeds,
+        } => {
             info!(
                 "Fuzzing job started for target: {:?} using engine {:?}",
                 &target, &engine
@@ -85,8 +101,12 @@ fn run(opt: Opt) -> Result<()> {
                 Fuzzer::Honggfuzz => runner::run_honggfuzz(&target, engine, seeds).is_err(),
                 _ => runner::run_libfuzzer(&target, engine, seeds).is_err(),
             };
-        },
-        Command::GenCorpus { target, engine, seeds } => {
+        }
+        Command::GenCorpus {
+            target,
+            engine,
+            seeds,
+        } => {
             trace!(
                 "Generating {:?} seeds for target: {:?} using engine {:?}",
                 &seeds,
@@ -101,12 +121,12 @@ fn run(opt: Opt) -> Result<()> {
             //info!("{:?}", &corpus_dir);
             info!("Corpus generation completed!");
             //if corpus_dir.is_err() {
-              //  info!("Corpus directory exists, NOT generating any seeds");
-                //info!("Corpus generation completed!")
+            //  info!("Corpus directory exists, NOT generating any seeds");
+            //info!("Corpus generation completed!")
             //} else {
-              //  info!("Corpus generation completed!");
-           // }
-        },
+            //  info!("Corpus generation completed!");
+            // }
+        }
         Command::ListEngines {} => {
             info!(
                 "Current supported engines are:\n\
@@ -117,10 +137,10 @@ fn run(opt: Opt) -> Result<()> {
                 Fuzzer::Libfuzzer,
                 Fuzzer::Honggfuzz
             );
-        },
+        }
         Command::ListTargets {} => {
             fuzz_targets::list_targets();
-        },
+        }
     };
     Ok(())
 }
