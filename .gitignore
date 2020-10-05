@@ -1,0 +1,24 @@
+#ignore data output
+data/
+
+#ignore target output
+fuzz-incremental/
+target/
+##ignore engines output
+fuzzer-libfuzzer/target/
+fuzzer-libfuzzer/artifact-*/
+fuzzer-libfuzzer/corpus-*/
+fuzzer-libfuzzer/fuzz-incremental/
+fuzzer-afl/target/
+fuzzer-afl/artifact-*/
+fuzzer-afl/corpus-*/
+fuzzer-afl/fuzz-incremental/
+fuzzer-honggfuzz/hfuzz_workspace/
+fuzzer-honggfuzz/hfuzz_target/
+fuzzer-honggfuzz/artifact-*/
+fuzzer-honggfuzz/corpus-*/
+fuzzer-honggfuzz/fuzz-incremental/
+
+#ignore 
+.idea/
+

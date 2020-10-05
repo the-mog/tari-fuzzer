@@ -1,0 +1,9 @@
+[package]
+name = "afl"
+version = "0.1.0"
+publish = false
+edition = "2018"
+
+[dependencies]
+afl = "0.4.4"
+fuzz_targets = { path = "../fuzz_targets", default-features = false }
