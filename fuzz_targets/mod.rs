@@ -3,28 +3,33 @@ extern crate log;
 extern crate proptest;
 extern crate tari_crypto;
 extern crate tari_mmr;
-
+extern crate tari_core;
 use log::{info, trace, warn};
 
 pub mod common;
-pub mod tari_core_mmr;
 pub mod tari_util;
+pub mod tari_core_mmr;
+pub mod tari_core_transactions;
 
 /// Tari Core targets
 pub use tari_core_mmr::*;
+pub use tari_core_transactions::*;
 
 /// Tari Util targets
 pub use tari_util::*;
 
 /// Tari Crypto targets
 
-// Targets
+/// Targets
 const TARGETS: &[&str] = &[
-    "fuzz_mmr_push_bytes",
     "util_to_hex",
     "util_bytes_to_bits",
     "util_from_hex",
     "util_to_hex_multiple",
+    "core_trx_create_coinbase",
+    "core_trx_with_maturity",
+    "mmr_push_bytes",
+
 ];
 
 pub fn list_targets() {
