@@ -89,6 +89,11 @@ Fuzz a Specific Target using Default Settings
 ```sh
 cargo run fuzz -t <target>
 ```
+Build and Run Regression Tests
+```sh
+cargo run build
+```
+
 ## Adding Fuzz Targets
 To add a target, you need to edit two files:  
 `fuzz_targets/mod.rs` and `src/corpus.rs`
