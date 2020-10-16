@@ -1,6 +1,6 @@
 #ignore data output
 data/
-
+*.swap
 #ignore target output
 fuzz-incremental/
 target/
