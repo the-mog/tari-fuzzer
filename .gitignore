@@ -4,8 +4,8 @@ data/
 
 #swap
 *.swp
-
-#ignore target output
+Cargo.lock
+#gnore target output
 fuzz-incremental/
 target/
 ##ignore engines output
