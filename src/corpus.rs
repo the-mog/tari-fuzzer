@@ -128,12 +128,7 @@ pub fn gen_corpus(target: &str, fuzzer: Fuzzer, num_items: usize) -> Result<Path
             info!("Not generating seeds for this target!");
             Ok(corpus_dir)
         },
-        "core_trx_with_message" => {
-            info!("Not generating seeds for this target!");
-            Ok(corpus_dir)
-        },
 
-        
         _ => panic!("Unable to generate fuzzing seeds for {:?}", &target),
     }
 }

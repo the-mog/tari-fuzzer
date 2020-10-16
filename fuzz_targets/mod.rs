@@ -9,14 +9,11 @@ use log::{info, trace, warn};
 pub mod common;
 pub mod tari_util;
 pub mod tari_core_mmr;
-//pub mod tari_core_misc;
 pub mod tari_core_transactions;
 
 /// Tari Core targets
 pub use tari_core_mmr::*;
 pub use tari_core_transactions::*;
-//pub use tari_core_misc::*;
-
 /// Tari Util targets
 pub use tari_util::*;
 

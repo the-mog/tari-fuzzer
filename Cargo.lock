@@ -968,7 +968,10 @@ dependencies = [
  "lazy_static 1.4.0",
  "log",
  "proptest",
+<<<<<<< HEAD
  "rand 0.7.3",
+=======
+>>>>>>> c8d889a8c9b9b4f62da061b6193488497374c7cc
  "tari_core",
  "tari_crypto 0.3.1",
  "tari_mmr",
