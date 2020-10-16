@@ -30,7 +30,7 @@ pub fn gen_corpus(target: &str, fuzzer: Fuzzer, num_items: usize) -> Result<Path
     let mut idx: usize = 0;
     match target {
         //MMR
-        "fuzz_mmr_push_bytes" => {
+        "mmr_push_bytes" => {
             //let seedfn = corpus_name!("fuzz_mmr_push_bytes_seeds");
             //let gen = seedfn(&mut gen);
             while idx < num_items {
@@ -87,7 +87,7 @@ pub fn gen_corpus(target: &str, fuzzer: Fuzzer, num_items: usize) -> Result<Path
             Ok(corpus_dir)
         }
         "util_to_hex_multiple" => {
-            info!("Not generating seeds for this targets!");
+            info!("Not generating seeds for this target!");
             Ok(corpus_dir)
         }
         "crypto_opcodes_to_hash" => {
@@ -119,7 +119,21 @@ pub fn gen_corpus(target: &str, fuzzer: Fuzzer, num_items: usize) -> Result<Path
                 idx += 1;
             }
             Ok(corpus_dir)
-        }
+        },
+        "core_trx_create_coinbase" => {
+            info!("Not generating seeds for this target!");
+            Ok(corpus_dir)
+        },
+        "core_trx_with_maturity" => {
+            info!("Not generating seeds for this target!");
+            Ok(corpus_dir)
+        },
+        "core_trx_with_message" => {
+            info!("Not generating seeds for this target!");
+            Ok(corpus_dir)
+        },
+
+        
         _ => panic!("Unable to generate fuzzing seeds for {:?}", &target),
     }
 }

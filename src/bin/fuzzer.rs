@@ -1,5 +1,5 @@
 use clap::AppSettings;
-use fuzz_targets::check_target;
+use fuzz_targets::{check_target,TARGETS};
 use log::{info, trace, warn, LevelFilter};
 use once_cell::sync::Lazy;
 use std::process::exit;
@@ -42,6 +42,13 @@ enum Command {
         default_value = &CORPUS_ITEMS_STR,
         )]
         seeds: usize,
+    },
+    #[structopt(name = "build", about = "Build specified target")]
+    Build {
+        /// Engine to use (use `engines` to list them)
+        #[structopt(name="ENGINE", help = "A fuzzing engine to use",
+        case_insensitive=true, short = "e", default_value=&ENGINE_DEFAULT)]
+        engine: Fuzzer,
     },
     #[structopt(name = "list-targets", about = "Get the list of available targets")]
     ListTargets {},
@@ -101,6 +108,21 @@ fn run(opt: Opt) -> Result<()> {
                 Fuzzer::Honggfuzz => runner::run_honggfuzz(&target, engine, seeds).is_err(),
                 _ => runner::run_libfuzzer(&target, engine, seeds).is_err(),
             };
+        }
+        Command::Build {
+            engine,
+        } => {
+            
+            //check_target(&target);
+           for target in &*TARGETS {
+            info!(
+                "Building targets: {}", &target
+            );
+            let artifact_dir = format!("./fuzzer-libfuzzer/artifact-{}", &target);
+            runner::build_libfuzzer(&target, engine, &artifact_dir).is_err();
+               
+           }
+
         }
         Command::GenCorpus {
             target,

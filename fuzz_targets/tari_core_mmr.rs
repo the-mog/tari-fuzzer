@@ -1,18 +1,11 @@
-use crate::common::SeedGen;
 use digest::Digest;
 use tari_crypto::common::Blake256;
 use tari_mmr::MerkleMountainRange;
 
 pub type Hasher = Blake256;
 
-/// MMR fuzzing
 
-pub fn fuzz_mmr_push_bytes_seeds(gen: &mut SeedGen) -> Vec<u8> {
-    let data = gen.generate(proptest::arbitrary::any::<Vec<u8>>());
-    data
-}
-
-pub fn fuzz_mmr_push_bytes(data: &[u8]) {
+pub fn mmr_push_bytes(data: &[u8]) {
     if let Ok(_s) = std::str::from_utf8(data) {
         let mut mmr = MerkleMountainRange::<Hasher, _>::new(Vec::default());
 
@@ -22,7 +15,7 @@ pub fn fuzz_mmr_push_bytes(data: &[u8]) {
         for n in 0..1001 {
             let hash = Hasher::digest(&data).to_vec();
             //  println!("Hash is: {:?}", &hash);
-            let pushd = mmr.push(&hash);
+            let pushd = mmr.push(hash);
             assert!(pushd.is_ok());
             let _cnt = mmr.get_leaf_count().unwrap();
             assert!(mmr.len().is_ok());

@@ -243,3 +243,58 @@ pub fn run_libfuzzer(target: &str, fuzzer: Fuzzer, seeds: usize) -> Result<()> {
 
     Ok(())
 }
+/// Run one target fuzz test using Libfuzzer
+pub fn build_libfuzzer(target: &str, fuzzer: Fuzzer, artifacts: &str) -> Result<()> {
+    trace!("Regression tests with LibFuzzer");
+    write_fuzz_target_source_file(&fuzzer, &target)?;
+    //let artifact_dir = artifacts;
+    //let corpus_dir = gen_corpus(&target, fuzzer, seeds)?;
+    //info!("Corpus generated!");
+
+    #[cfg(target_os = "macos")]
+    let target_platform = "x86_64-apple-darwin";
+    #[cfg(target_os = "linux")]
+    let target_platform = "x86_64-unknown-linux-gnu";
+    #[cfg(not(any(target_os = "linux", target_os = "macos")))]
+    panic!("libfuzzer-sys only supports Linux and macOS");
+
+    // FIXME: The -C codegen-units=1 and -C incremental=..
+    // below seem to workaround some difficult issues in Rust nightly
+    // https://github.com/rust-lang/rust/issues/53945.
+    // If this is ever fixed remember to remove the fuzz-incremental
+    // entry from .gitignore.
+    let mut rust_flags = env::var("RUSTFLAGS").unwrap_or_default();
+    rust_flags.push_str(
+        "--cfg fuzzing -C codegen-units=1 -C incremental=fuzz-incremental -C passes=sancov -C \
+         llvm-args=-sanitizer-coverage-level=4 -C llvm-args=-sanitizer-coverage-trace-compares -C \
+         llvm-args=-sanitizer-coverage-inline-8bit-counters -C llvm-args=-sanitizer-coverage-trace-geps -C \
+         llvm-args=-sanitizer-coverage-prune-blocks=0 -C debug-assertions=on -C debuginfo=0 -C opt-level=3 -Z \
+         sanitizer=address",
+    );
+
+    let mut asan_options = env::var("ASAN_OPTIONS").unwrap_or_default();
+    asan_options.push_str(" detect_odr_violation=0");
+
+    let fuzzer_bin = Command::new("cargo")
+        .args(&["run", "--target", &target_platform, "--bin", target, "--"])
+        //.arg(&corpus_dir)
+        .arg(&artifacts)
+        //.arg("-runs=0")
+        .env("RUSTFLAGS", &rust_flags)
+        .env("ASAN_OPTIONS", &asan_options)
+        .current_dir(fuzzer.directory())
+        .spawn()
+        .context(format!("Failed to run {}", fuzzer))?
+        .wait()
+        .context(format!("Failed to wait {}", fuzzer))?;
+
+    if !fuzzer_bin.success() {
+        return Err(anyhow!(
+            "{} exited with code {:?}",
+            fuzzer,
+            fuzzer_bin.code()
+        ));
+    }
+
+    Ok(())
+}

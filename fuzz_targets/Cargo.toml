@@ -20,3 +20,5 @@ log = "0.4.11"
 
 tari_mmr = { path = "../../tari/base_layer/mmr", default-features = false }
 tari_utilities = { path = "../../tari_utilities", default-features = false }
+tari_core = { path = "../../tari/base_layer/core" }
+rand = "0.7.3"
